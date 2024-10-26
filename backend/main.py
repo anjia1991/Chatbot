@@ -9,8 +9,8 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from ai import get_completion
-from stt import transcribe
-from tts import to_speech
+from input import from_speech
+from output import to_speech
 
 app = FastAPI()
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +22,7 @@ async def infer(audio: UploadFile, background_tasks: BackgroundTasks,
     logging.debug("received request")
     start_time = time.time()
 
-    user_prompt_text = await transcribe(audio)
+    user_prompt_text = await from_speech(audio)
     ai_response_text = await get_completion(user_prompt_text, conversation)
     ai_response_audio_filepath = await to_speech(ai_response_text, background_tasks)
 
